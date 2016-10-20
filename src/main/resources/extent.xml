@@ -34,9 +34,11 @@
         <scripts>
 
             <![CDATA[
-                $(document).ready(function() {
-                $('#enableDashboard').click();
-                });
+                 $(document).ready(function() {
+                    setTimeout(function() {
+                        $('#enableDashboard').click();
+                             }, 500);
+});
             ]]>
 
         </scripts>
