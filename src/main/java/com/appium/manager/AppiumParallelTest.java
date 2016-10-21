@@ -174,7 +174,8 @@ public class AppiumParallelTest extends TestListenerAdapter implements ITestList
         return false;
     }
 
-    @BeforeClass(alwaysRun = true) @Parameters({"device"})
+    @BeforeClass(alwaysRun = true)
+    @Parameters({"device"})
     public synchronized AppiumServiceBuilder startAppiumServer(String device) throws Exception {
         String methodName = getClass().getSimpleName();
         if (prop.containsKey("CI_BASE_URI")) {
@@ -233,7 +234,6 @@ public class AppiumParallelTest extends TestListenerAdapter implements ITestList
 
     public synchronized AppiumDriver<MobileElement> startAppiumServerInParallel(String methodName)
         throws Exception {
-        ExtentTestManager.loadConfig();
         if (prop.getProperty("FRAMEWORK").equalsIgnoreCase("testng")) {
             setAuthorName(methodName);
         }
@@ -244,7 +244,6 @@ public class AppiumParallelTest extends TestListenerAdapter implements ITestList
 
     public synchronized AppiumDriver<MobileElement> startAppiumServerInParallel(String methodName,
         DesiredCapabilities iosCaps, DesiredCapabilities androidCaps) throws Exception {
-        ExtentTestManager.loadConfig();
         if (prop.getProperty("FRAMEWORK").equalsIgnoreCase("testng")) {
             setAuthorName(methodName);
         }
@@ -255,7 +254,6 @@ public class AppiumParallelTest extends TestListenerAdapter implements ITestList
 
     public synchronized AppiumDriver<MobileElement> startAppiumServerInParallel(String methodName,
         DesiredCapabilities caps) throws Exception {
-        ExtentTestManager.loadConfig();
         if (prop.getProperty("FRAMEWORK").equalsIgnoreCase("testng")) {
             setAuthorName(methodName);
         }
@@ -269,8 +267,8 @@ public class AppiumParallelTest extends TestListenerAdapter implements ITestList
         if (getClass().getMethod(methodName).getAnnotation(Author.class) != null) {
             authorName = getClass().getMethod(methodName).getAnnotation(Author.class).name();
             Collections.addAll(listeners, authorName.split("\\s*,\\s*"));
-            ExtentTest child = parentTest.get().
-                createNode(methodName.toString(),
+            ExtentTest child = parentTest.get()
+                .createNode(methodName.toString(),
                     category + "_" + device_udid.replaceAll("\\W", "_")).assignAuthor(
                 String.valueOf(listeners));
             test.set(child);
@@ -394,11 +392,11 @@ public class AppiumParallelTest extends TestListenerAdapter implements ITestList
 
         if (result.isSuccess()) {
             writeFailureToTxt("TestPassed");
-            ExtentTestManager.getTest().log(Status.PASS, result.getMethod().getMethodName());
+            test.get().log(Status.PASS, result.getMethod().getMethodName());
             if (driver.toString().split("\\(")[0].trim().equals("AndroidDriver:  on LINUX")) {
                 log_file_writer.println(logEntries);
                 log_file_writer.flush();
-                ExtentTestManager.getTest().log(Status.INFO,
+                test.get().log(Status.INFO,
                     "ADBLogs:: <a href=" + "adblogs/" + device_udid.replaceAll("\\W", "_") + "__"
                         + result.getMethod().getMethodName() + ".txt" + ">AdbLogs</a>");
                 System.out.println(driver.getSessionId() + ": Saving device log - Done.");
@@ -407,11 +405,9 @@ public class AppiumParallelTest extends TestListenerAdapter implements ITestList
         }
         if (result.getStatus() == ITestResult.FAILURE) {
             writeFailureToTxt("TestFailed");
-            ExtentTestManager.getTest().log(Status.FAIL, result.getThrowable());
+            test.get().log(Status.FAIL, result.getThrowable());
             if (driver.toString().split(":")[0].trim().equals("AndroidDriver")) {
-                System.out.println("im in");
                 deviceModel = androidDevice.getDeviceModel(device_udid);
-                //captureScreenshot(result.getMethod().getMethodName(), "android", className);
                 captureScreenShot(result.getMethod().getMethodName(), result.getStatus(),
                     result.getTestClass().getName());
             } else if (driver.toString().split(":")[0].trim().equals("IOSDriver")) {
@@ -427,15 +423,15 @@ public class AppiumParallelTest extends TestListenerAdapter implements ITestList
                         .getMethodName() + "/" + screenShotNameWithTimeStamp + deviceModel
                         + "_failed_" + result.getMethod().getMethodName() + "_framed.png");
                 if (framedImageAndroid.exists()) {
-                    ExtentTestManager.getTest().log(Status.INFO,
-                        "Snapshot below: " + ExtentTestManager.getTest().addScreenCaptureFromPath(
+                    test.get().log(Status.INFO,
+                        "Snapshot below: " + test.get().addScreenCaptureFromPath(
                             "screenshot/android/" + device_udid.replaceAll("\\W", "_") + "/"
                                 + className + "/" + result.getMethod().getMethodName() + "/"
                                 + screenShotNameWithTimeStamp + deviceModel + "_failed_" + result
                                 .getMethod().getMethodName() + "_framed.png"));
                 } else {
-                    ExtentTestManager.getTest().log(Status.INFO,
-                        "Snapshot below: " + ExtentTestManager.getTest().addScreenCaptureFromPath(
+                    test.get().log(Status.INFO,
+                        "Snapshot below: " + test.get().addScreenCaptureFromPath(
                             "screenshot/android/" + device_udid.replaceAll("\\W", "_") + "/"
                                 + className + "/" + result.getMethod().getMethodName() + "/"
                                 + screenShotNameWithTimeStamp + deviceModel + "_" + result
@@ -453,15 +449,15 @@ public class AppiumParallelTest extends TestListenerAdapter implements ITestList
                 System.out.println("************************" + framedImageIOS.exists()
                     + "***********************");
                 if (framedImageIOS.exists()) {
-                    ExtentTestManager.getTest().log(Status.INFO,
-                        "Snapshot below: " + ExtentTestManager.getTest().addScreenCaptureFromPath(
+                    test.get().log(Status.INFO,
+                        "Snapshot below: " + test.get().addScreenCaptureFromPath(
                             "screenshot/iOS/" + device_udid.replaceAll("\\W", "_") + "/" + className
                                 + "/" + result.getMethod().getMethodName() + "/"
                                 + screenShotNameWithTimeStamp + deviceModel + "_failed_" + result
                                 .getMethod().getMethodName() + "_framed.png"));
                 } else {
-                    ExtentTestManager.getTest().log(Status.INFO,
-                        "Snapshot below: " + ExtentTestManager.getTest().addScreenCaptureFromPath(
+                    test.get().log(Status.INFO,
+                        "Snapshot below: " + test.get().addScreenCaptureFromPath(
                             "screenshot/iOS/" + device_udid.replaceAll("\\W", "_") + "/" + className
                                 + "/" + result.getMethod().getMethodName() + "/"
                                 + screenShotNameWithTimeStamp + deviceModel + "_" + result
@@ -474,7 +470,7 @@ public class AppiumParallelTest extends TestListenerAdapter implements ITestList
             if (driver.toString().split("\\(")[0].trim().equals("AndroidDriver:  on LINUX")) {
                 log_file_writer.println(logEntries);
                 log_file_writer.flush();
-                ExtentTestManager.getTest().log(Status.INFO,
+                test.get().log(Status.INFO,
                     "ADBLogs:: <a href=" + "adblogs/" + device_udid.replaceAll("\\W", "_") + "__"
                         + result.getMethod().getMethodName() + ".txt" + ">AdbLogs</a>");
                 System.out.println(driver.getSessionId() + ": Saving device log - Done.");
@@ -483,7 +479,7 @@ public class AppiumParallelTest extends TestListenerAdapter implements ITestList
         }
         if (result.getStatus() == ITestResult.SKIP) {
             writeFailureToTxt("TestSkipped");
-            ExtentTestManager.getTest().log(Status.SKIP, "Test skipped");
+            test.get().log(Status.SKIP, "Test skipped");
         }
 
         if (System.getenv("VIDEO_LOGS") != null) {

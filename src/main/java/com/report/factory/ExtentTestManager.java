@@ -36,28 +36,17 @@ public class ExtentTestManager { // new
         imgSrc = "<div class='col l4 m6 s12'><div class='card-panel'><h4 class='md-display-4'>"
             + headerName + "</h4><img src=" + imgSrc
             + " style=\"width:100%;height:100%;\"></div></div>";
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        //extent.loadConfig(classLoader.getResource("extent.xml"));
-        extent.setTestRunnerOutput(imgSrc);
-        //extent.setTestRunnerOutput(s);
+        //extent.setTestRunnerOutput(imgSrc);
     }
 
     public synchronized static void logVideo(String videoSrc, String headerName) {
-        videoSrc = "<div class='col l4 m6 s12'><div class='card-panel'><h2 class='md-display-4'>"
-            + headerName + "</h2><video width=\"320\" height=\"240\" controls>" + "<source src="
+        videoSrc = "<div class='col l4 m6 s12'><div class='card-panel'><h4 class='md-display-4'>"
+            + headerName + "</h4><video width=\"320\" height=\"240\" controls>" + "<source src="
             + videoSrc + " style=\"width:100%;height:100%;\" type=\"video/mp4\">"
             + "</video></div></div>";
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        //extent.loadConfig(classLoader.getResource("extent.xml"));
         extent.setTestRunnerOutput(videoSrc);
-        //extent.setTestRunnerOutput(s);
     }
 
-
-    public synchronized static void loadConfig() {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        //extent.loadConfig(classLoader.getResource("extent.xml"));
-    }
 
     public synchronized static void logger(String message) {
         Reporter.log(message + "<br>", true);

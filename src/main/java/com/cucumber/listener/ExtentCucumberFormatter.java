@@ -4,26 +4,13 @@ import com.appium.ios.IOSDeviceConfiguration;
 import com.appium.manager.AndroidDeviceConfiguration;
 import com.appium.manager.AppiumParallelTest;
 import com.appium.utils.ImageUtils;
-
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.report.factory.ExtentManager;
 import com.report.factory.ExtentTestManager;
-
-
 import gherkin.formatter.Formatter;
 import gherkin.formatter.Reporter;
-import gherkin.formatter.model.Background;
-import gherkin.formatter.model.Examples;
-import gherkin.formatter.model.Feature;
-import gherkin.formatter.model.Match;
-import gherkin.formatter.model.Result;
-import gherkin.formatter.model.Scenario;
-import gherkin.formatter.model.ScenarioOutline;
-import gherkin.formatter.model.Step;
-import gherkin.formatter.model.Tag;
-
-
+import gherkin.formatter.model.*;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import org.apache.commons.io.FileUtils;
@@ -85,11 +72,11 @@ public class ExtentCucumberFormatter implements Reporter, Formatter {
             ExtentTestManager.getTest().log(Status.PASS, testSteps.poll().getName());
         } else if ("failed".equals(result.getStatus())) {
             String failed_StepName = testSteps.poll().getName();
-            ExtentTestManager.getTest().log(Status.FAIL,result.getError());
+            ExtentTestManager.getTest().log(Status.FAIL, result.getError());
             String context = getDriver().getContext();
             boolean contextChanged = false;
-            if (getDriver().toString().split(":")[0].trim().equals("AndroidDriver") 
-                    && !context.equals("NATIVE_APP")) {
+            if (getDriver().toString().split(":")[0].trim().equals("AndroidDriver") && !context
+                .equals("NATIVE_APP")) {
                 getDriver().context("NATIVE_APP");
                 contextChanged = true;
             }
@@ -119,8 +106,7 @@ public class ExtentCucumberFormatter implements Reporter, Formatter {
         } else if ("skipped".equals(result.getStatus())) {
             ExtentTestManager.getTest().log(Status.SKIP, testSteps.poll().getName());
         } else if ("undefined".equals(result.getStatus())) {
-            ExtentTestManager.getTest()
-                .log(Status.UNKNOWN, testSteps.poll().getName());
+            ExtentTestManager.getTest().log(Status.UNKNOWN, testSteps.poll().getName());
         }
     }
 
@@ -155,8 +141,9 @@ public class ExtentCucumberFormatter implements Reporter, Formatter {
         }
         for (Tag tag : feature.getTags()) {
             parent = ExtentTestManager.createTest(feature.getName()).assignCategory(
-                appiumParallelTest.category + appiumParallelTest.device_udid.replaceAll("\\W", "_") +
-                tag.getName());
+                appiumParallelTest.category
+                    + appiumParallelTest.device_udid.replaceAll("\\W", "_")
+                    + tag.getName());
         }
         parentContext.put(Thread.currentThread().getId(), parent);
     }

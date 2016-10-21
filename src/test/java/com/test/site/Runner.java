@@ -15,7 +15,7 @@ public class Runner {
         List<String> tests = new ArrayList<>();
         //tests.add("HomePageTest1");
         tests.add("HomePageTest2");
-        parallelThread.runner("com.test.site",tests);
+        parallelThread.runner("com.test.site");
         Assert.assertFalse(AppiumParallelTest.buildStatus());
     }
 }

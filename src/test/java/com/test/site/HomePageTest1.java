@@ -83,7 +83,6 @@ public class HomePageTest1 extends UserBaseTest {
                 .getStackTrace()[1].getClassName());
         getDriver().findElement(By.id("com.android2.calculator3:id/cling_dismiss")).click();
         getDriver().findElement(By.id("com.android2.calculator3:id/digit3")).click();
-       // captureScreenShot("TestMethod8");
         getDriver().findElement(By.id("com.android2.calculator3:id/plus")).click();
         getDriver().findElement(By.id("com.android2.calculator3:id/digit9")).click();
         getDriver().findElement(By.id("com.android2.calculator3:id/equal")).click();
