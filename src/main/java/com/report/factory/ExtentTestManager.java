@@ -12,6 +12,7 @@ public class ExtentTestManager { // new
 
     public static ThreadLocal<ExtentTest> extentTest = new ThreadLocal<ExtentTest>();
     public static ExtentReports extent = ExtentManager.getExtent();
+    static ExtentTest test;
 
     public synchronized static ExtentTest getTest() {
         return extentTest.get();
@@ -19,7 +20,7 @@ public class ExtentTestManager { // new
 
     public synchronized static ExtentTest createTest(String name, String description,
         String deviceId) {
-        ExtentTest test = extent.createTest(name, description).assignCategory(deviceId);
+        test = extent.createTest(name, description).assignCategory(deviceId);
         extentTest.set(test);
         return getTest();
     }

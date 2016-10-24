@@ -212,7 +212,7 @@ public class AppiumParallelTest extends TestListenerAdapter implements ITestList
             }
             //ExtentManager.createInstance();
             //ExtentTestManager.setReporter(ExtentManager.getInstance());
-            ExtentTest parent = ExtentTestManager.createTest(methodName, testDescription,
+            parent = ExtentTestManager.createTest(methodName, testDescription,
                 category + "_" + device_udid.replaceAll("\\W", "_"));
             parentTest.set(parent);
             ExtentTestManager.getTest().log(Status.INFO,
@@ -267,13 +267,13 @@ public class AppiumParallelTest extends TestListenerAdapter implements ITestList
         if (getClass().getMethod(methodName).getAnnotation(Author.class) != null) {
             authorName = getClass().getMethod(methodName).getAnnotation(Author.class).name();
             Collections.addAll(listeners, authorName.split("\\s*,\\s*"));
-            ExtentTest child = parentTest.get()
+            child = parentTest.get()
                 .createNode(methodName.toString(),
                     category + "_" + device_udid.replaceAll("\\W", "_")).assignAuthor(
                 String.valueOf(listeners));
             test.set(child);
         } else {
-            ExtentTest child = parentTest.get().createNode(methodName.toString(),
+            child = parentTest.get().createNode(methodName.toString(),
                 category + "_" + device_udid.replaceAll("\\W", "_"));
             test.set(child);
         }

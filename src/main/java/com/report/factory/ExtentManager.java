@@ -6,8 +6,17 @@ import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import com.aventstack.extentreports.reporter.ExtentXReporter;
 import com.aventstack.extentreports.reporter.configuration.ChartLocation;
 import com.aventstack.extentreports.reporter.configuration.Theme;
+import org.apache.commons.io.FileUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Properties;
 
 public class ExtentManager {
@@ -55,9 +64,19 @@ public class ExtentManager {
 
     private static ExtentHtmlReporter getHtmlReporter() {
         ExtentHtmlReporter htmlReporter = new ExtentHtmlReporter(filePath);
-        ClassLoader classLoader = Thread.currentThread().getClass().getClassLoader();
-        File file = new File(classLoader.getResource("extent.xml").getFile());
-        htmlReporter.loadXMLConfig(file);
+        URL inputUrl = null;
+        try {
+            inputUrl = Thread.currentThread().getContextClassLoader().getResource("extent.xml");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        File dest = new File(System.getProperty("user.dir") + "/target/extent.xml");
+        try {
+            FileUtils.copyURLToFile(inputUrl, dest);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        htmlReporter.loadXMLConfig(System.getProperty("user.dir") + "/target/extent.xml");
         // make the charts visible on report open
         htmlReporter.config().setChartVisibilityOnOpen(true);
 
